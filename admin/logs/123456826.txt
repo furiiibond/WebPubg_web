@@ -1,0 +1,3 @@
+Received parameters: admin; 123456826; 1; 60*1; bestpriceboot1@gmail.com; Boot12344321
+Received 'Data recieved as:  newOrder;admin;123456826;1;60*1;bestpriceboot1@gmail.com;Boot12344321!'
+All parameters sent to the bot
