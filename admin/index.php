@@ -141,7 +141,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                 ];
             
                                 if($duplicateControl == false){
-                                    //file_put_contents("orders/".$orderID.".json",json_encode($orderDetail));
+                                    file_put_contents("orders/".$orderID.".json",json_encode($orderDetail));
                                     # ADDED start the python script order with venv
                                     # get username and password of user with userID
                                     $users = glob("users/*.json");
@@ -156,7 +156,9 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                             $username = $userDetail["username"];
                                             $password = $userDetail["password"];
                                         }
-                                    }//
+                                    }
+                                    # change quantity last from 60*1 - 1800*1 to 60*1,1800*1
+                                    $quantityLast = str_replace(" - ",",",$quantityLast);
                                     $command = escapeshellcmd("python3 /mnt/hgfs/FIVERR/websitePubg/Desktop/newOrder.py $adminUsername $orderID $userID $quantityLast $username $password");
                                     $output = shell_exec($command . " 2>&1"); // 2>&1 is for error
                                     # save output to log file
@@ -220,7 +222,8 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
     <!-- Custom styles for this template-->
     <link href="theme/css/sb-admin-2.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="theme/img/undraw_profile.png">
-    <link href="theme/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+        <link href="theme/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="theme/css/barmenu.css">
     <style>
         input[type="number"] {
         -webkit-appearance: textfield;
@@ -292,14 +295,114 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
         }
     </style>
 </head>
+<script type="text/javascript">
+    var intervalId;
+        intervalId = setInterval(function(){
+            // if there is nothing serached in table
+            if ($('#dataTable_filter > label > input').val() == '') {
+                // hide the pagination
+                $('#orderTable .dataTables_paginate').hide();
+                // hide dataTables_length
+                $('#orderTable .dataTables_length').hide();
+                // display "AUTO REFRESHING" in #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) by add a new div
+                if ($('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div').length == 1) {
+                    // add loading logo created in css and check button
+                    $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1)').append('<div style="display: flex;"><div class="loader"></div><div style="margin-left: 10px;">AUTO REFRESHING</div><div style="margin-left: 10px;"><input type="checkbox" id="check" checked></div></div>');
+                }
+                if(!$("#orderTable #check").is(":checked")) {
+                    $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)').hide();
+                    return;
+                } else {
+                    $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)').show();
+                }
+                $.ajax({
+                    url: 'functions/getLastOrdersTable.php',
+                    type: 'POST',
+                    success: function(data){
+                        $('#ordersTable').html(data);
+                    }
+                });
+            } else {
+                // remove "AUTO REFRESHING"
+                $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)').remove();
+                // show the pagination
+                $('#orderTable .dataTables_paginate').show();
+                // show dataTables_length
+                $('#orderTable .dataTables_length').show();
+
+        }}, 1000);
+    var intervalId2;
+    intervalId2 = setInterval(function(){
+        // if there is nothing serached in table
+        if ($('#dataTable2_filter input').val() == '') {
+            // hide the pagination
+            $('#dataTable2_paginate').hide();
+            // hide dataTables2_length
+            $('#dataTable2_length').hide();
+            // display "AUTO REFRESHING" in #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) by add a new div
+            if ($('#dataTable2_wrapper > div:nth-child(1) > div:nth-child(1) > div').length == 1) {
+                // add loading logo created in css and check button
+                $('#dataTable2_wrapper > div:nth-child(1) > div:nth-child(1)').append('<div style="display: flex;"><div class="loader"></div><div style="margin-left: 10px;">AUTO REFRESHING</div><div style="margin-left: 10px;"><input type="checkbox" id="check2" checked></div></div>');
+            }
+            if(!$("#check2").is(":checked")) {
+                $('#dataTable2_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)').hide();
+                return;
+            } else {
+                $('#dataTable2_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)').show();
+            }
+            $.ajax({
+                url: 'functions/getCodesDetails.php',
+                type: 'POST',
+                success: function(data){
+                    $('#codeStat tbody').html(data);
+                }
+            });
+        } else {
+            // remove "AUTO REFRESHING"
+            $('#dataTable2_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)').remove();
+            // show the pagination
+            $('#dataTable2_paginate').show();
+            // show dataTables_length
+            $('#dataTable2_length').show();
+
+        }}, 1500);
+</script>
 
 <body id="page-top">
+
+<div class="hero__phone">
+    <section class="menu__body">
+        <div class="menu__links"><!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+                <div class="sidebar-brand-icon phone_icon rotate-n-15">
+                    <i class="fas fa-skull-crossbones"></i>
+                </div>
+            </a>
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="orders.php">
+                <div class="phone_icon">
+                    <i class="fas fa-fw fa-list"></i>
+                </div>
+            </a>
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="users.php">
+                <div class="phone_icon">
+                    <i class="fas fa-fw fa-user"></i>
+                </div>
+            </a>
+
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="codes.php">
+                <div class="phone_icon">
+                    <i class="fas fa-fw fa-code"></i>
+                </div>
+            </a>
+        </div>
+    </section>
+</div>
 
     <!-- Page Wrapper -->
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
@@ -612,7 +715,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-list"></i> Last Orders</h6>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" id="orderTable">
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                             <thead>
@@ -629,7 +732,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                                     <th>Status</th>
                                                 </tr>
                                             </tfoot>
-                                            <tbody>
+                                            <tbody id="ordersTable">
                                             <?php
                                             
                                             if(isset($orderDetails) && !empty($orderDetails)){
@@ -655,7 +758,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-code"></i> Code Statistics</h6>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" id="codeStat">
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
                                             <thead>

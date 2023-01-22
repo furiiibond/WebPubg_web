@@ -210,6 +210,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
 
     <!-- Custom styles for this page -->
     <link href="theme/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="theme/css/barmenu.css">
     <style>
         input[type="number"] {
         -webkit-appearance: textfield;
@@ -281,14 +282,82 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
         }
     </style>
 </head>
+<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+<script type="text/javascript">
+    var intervalId;
+    $(document).ready(function(){
+        intervalId = setInterval(function(){
+            // if there is nothing serached in table
+            if ($('.dataTables_filter input').val() == '') {
+                // hide the pagination
+                $('.dataTables_paginate').hide();
+                // hide dataTables_length
+                $('.dataTables_length').hide();
+                // display "AUTO REFRESHING" in #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) by add a new div
+                if ($('#dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div').length == 1) {
+                    // add loading logo created in css and check button
+                    $('#dataTable_wrapper > div:nth-child(1) > div:nth-child(1)').append('<div style="display: flex;"><div class="loader"></div><div style="margin-left: 10px;">AUTO REFRESHING</div><div style="margin-left: 10px;"><input type="checkbox" id="check" checked></div></div>');
+                }
+                if(!$("#check").is(":checked")) {
+                    $('#dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)').hide();
+                    return;
+                } else {
+                    $('#dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)').show();
+                }
+                $.ajax({
+                    url: 'functions/getOrdersTable.php',
+                    type: 'POST',
+                    success: function(data){
+                        $('#ordersTable').html(data);
+                    }
+                });
+            } else {
+                // remove "AUTO REFRESHING"
+                $('#dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)').remove();
+                // show the pagination
+                $('.dataTables_paginate').show();
+                // show dataTables_length
+                $('.dataTables_length').show();
+            }
+        }, 1000);
+    });
+</script>
 
 <body id="page-top">
+
+<div class="hero__phone">
+    <section class="menu__body">
+        <div class="menu__links"><!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+                <div class="sidebar-brand-icon phone_icon rotate-n-15">
+                    <i class="fas fa-skull-crossbones"></i>
+                </div>
+            </a>
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="orders.php">
+                <div class="phone_icon">
+                    <i class="fas fa-fw fa-list"></i>
+                </div>
+            </a>
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="users.php">
+                <div class="phone_icon">
+                    <i class="fas fa-fw fa-user"></i>
+                </div>
+            </a>
+
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="codes.php">
+                <div class="phone_icon">
+                    <i class="fas fa-fw fa-code"></i>
+                </div>
+            </a>
+        </div>
+    </section>
+</div>
 
     <!-- Page Wrapper -->
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
@@ -650,7 +719,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                             <th>Action</th>
                                         </tr>
                                     </tfoot>
-                                    <tbody>
+                                    <tbody id="ordersTable">
                                     <?php
                                     
                                     if(isset($orderDetails) && !empty($orderDetails)){
@@ -678,7 +747,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                     }
                                     
                                     ?>
-                                    </tbody>
+                                    </>
                                 </table>
                             </div>
                         </div>
@@ -746,6 +815,9 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
 
     <!-- Page level custom scripts -->
     <script src="theme/js/demo/datatables-demo.js"></script>
+
+    <!-- Page barmenu -->
+    
     <script>
         $('#quantity60').keyup(function() {  
             updateTotal();

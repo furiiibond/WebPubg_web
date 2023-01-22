@@ -156,17 +156,46 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
     <link rel="icon" type="image/x-icon" href="theme/img/undraw_profile.png">
 
     <!-- Custom styles for this page -->
-    <link href="theme/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+        <link href="theme/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="theme/css/barmenu.css">
 
 </head>
 
 <body id="page-top">
 
+<div class="hero__phone">
+    <section class="menu__body">
+        <div class="menu__links"><!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+                <div class="sidebar-brand-icon phone_icon rotate-n-15">
+                    <i class="fas fa-skull-crossbones"></i>
+                </div>
+            </a>
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="orders.php">
+                <div class="phone_icon">
+                    <i class="fas fa-fw fa-list"></i>
+                </div>
+            </a>
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="users.php">
+                <div class="phone_icon">
+                    <i class="fas fa-fw fa-user"></i>
+                </div>
+            </a>
+
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="codes.php">
+                <div class="phone_icon">
+                    <i class="fas fa-fw fa-code"></i>
+                </div>
+            </a>
+        </div>
+    </section>
+</div>
+
     <!-- Page Wrapper -->
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
@@ -467,6 +496,9 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
 
     <!-- Page level custom scripts -->
     <script src="theme/js/demo/datatables-demo.js"></script>
+    
+    <!-- Page barmenu -->
+    
 
 </body>
 
