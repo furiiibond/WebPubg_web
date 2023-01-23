@@ -43,28 +43,31 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])) {
         }
     }
 }
+$data = array();
 if(isset($orderDetails) && !empty($orderDetails)){
     foreach ($orderDetails as $key => $orderDetail) {
         if($orderDetail["status"] == "Completed"){
-            $action = "<td>-</td>";
+            $action = "-";
         }elseif($orderDetail["status"] == "Failed"){
-            $action = "<td><a href='?id=".$orderDetail["id"]."&status=Failed'>Delete Order</a></td>";
+            $action = "<a href='?id=".$orderDetail["id"]."&status=Failed'>Delete Order</a>";
         }else{
-            $action = "<td><a href='?id=".$orderDetail["id"]."&status=Completed'>Complete Order</a></td>";
+            $action = "<a href='?id=".$orderDetail["id"]."&status=Completed'>Complete Order</a>";
         }
-        echo "
-                                            <tr>
-                                                <td>".$orderDetail["id"]."</td>
-                                                <td>".$orderDetail["userID"]."</td>
-                                                <td>".$orderDetail["quantity"]."</td>
-                                                <td>".$orderDetail["quantityTotal"]."</td>
-                                                <td>".$orderDetail["quantitySent"]."</td>
-                                                <td>".gmdate("d.m.Y - H:i:s", $orderDetail["date"])."</td>
-                                                <td>".$orderDetail["status"]."</td>
-                                                <td>".$orderDetail["description"]."</td>
-                                                ".$action."
-                                            </tr>";
+        $data[] = array(
+            "ID" => $orderDetail["id"],
+            "User ID" => $orderDetail["userID"],
+            "Quantity" => $orderDetail["quantity"],
+            "Quantity Total" => $orderDetail["quantityTotal"],
+            "Quantity Sent" => $orderDetail["quantitySent"],
+            "Date" => gmdate("d.m.Y - H:i:s", $orderDetail["date"]),
+            "Status" => $orderDetail["status"],
+            "Description" => $orderDetail["description"],
+            "Action" => $action
+        );
     }
 }
+
+header('Content-Type: application/json');
+echo json_encode($data);
 
 ?>

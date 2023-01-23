@@ -289,35 +289,36 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
         intervalId = setInterval(function(){
             // if there is nothing serached in table
             if ($('.dataTables_filter input').val() == '') {
-                // hide the pagination
-                $('.dataTables_paginate').hide();
-                // hide dataTables_length
-                $('.dataTables_length').hide();
-                // display "AUTO REFRESHING" in #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) by add a new div
-                if ($('#dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div').length == 1) {
-                    // add loading logo created in css and check button
-                    $('#dataTable_wrapper > div:nth-child(1) > div:nth-child(1)').append('<div style="display: flex;"><div class="loader"></div><div style="margin-left: 10px;">AUTO REFRESHING</div><div style="margin-left: 10px;"><input type="checkbox" id="check" checked></div></div>');
-                }
-                if(!$("#check").is(":checked")) {
-                    $('#dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)').hide();
-                    return;
-                } else {
-                    $('#dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)').show();
-                }
                 $.ajax({
                     url: 'functions/getOrdersTable.php',
                     type: 'POST',
+                    dataType: 'json',
                     success: function(data){
-                        $('#ordersTable').html(data);
+                        // get the page clicked
+                        var page = $('.pagination .active a').text();
+                        var currentOrder = $('#dataTable').DataTable().order(); // Get the current order of the table
+                        if ( $.fn.DataTable.isDataTable('#dataTable') ) {
+                            $('#dataTable').DataTable().destroy();
+                        }
+                        var table = $('#dataTable').DataTable({
+                            data: data,
+                            columns: [
+                                { data: "ID" },
+                                { data: "User ID" },
+                                { data: "Quantity" },
+                                { data: "Quantity Total" },
+                                { data: "Quantity Sent" },
+                                { data: "Date" },
+                                { data: "Status" },
+                                { data: "Description" },
+                                { data: "Action" }
+                            ],
+                            order: currentOrder, // Apply the previous order to the new data
+                        });
+                        // go to the page clicked
+                        table.page(page-1).draw('page');
                     }
                 });
-            } else {
-                // remove "AUTO REFRESHING"
-                $('#dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)').remove();
-                // show the pagination
-                $('.dataTables_paginate').show();
-                // show dataTables_length
-                $('.dataTables_length').show();
             }
         }, 1000);
     });
