@@ -17,13 +17,24 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])) {
     ksort($codeDetails);
 
 
-    if (isset($codeDetails) && !empty($codeDetails)) {
-        foreach ($codeDetails as $key => $codeDetail) {
+    if(isset($codeDetails) && !empty($codeDetails)){
+        echo"<tr>
+                                                            <th>Amount:</th>";
+        foreach ($codeDetails as $key => $quantity) {
             echo "
-                                                    <tr>
-                                                        <td>" . $key . " UC</td>
-                                                        <td>" . $codeDetail . "</td>
-                                                    </tr>";
+
+                                                                    <td>".$key." UC</td>
+                                                                    ";
         }
+        echo "</tr>
+                                                                <tr>
+                                                                    <th>Quantity:</th>";
+        foreach ($codeDetails as $key => $quantity) {
+            echo "
+                                                                    <td>".$quantity."</td>
+                                                                    ";
+        }
+        echo "</tr>";
     }
+
 }
