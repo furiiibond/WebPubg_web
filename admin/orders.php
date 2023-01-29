@@ -282,7 +282,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
         }
     </style>
 </head>
-<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.js"></script>
 <script type="text/javascript">
     var intervalId;
     $(document).ready(function(){
