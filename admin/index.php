@@ -1,4 +1,5 @@
 <?php
+require __DIR__ . '/functions/isEnoughCode.php';
 session_start();
 
 if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
@@ -136,17 +137,26 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                 ];
 
                                 if($duplicateControl == false){
-                                    file_put_contents("orders/".$orderID.".json",json_encode($orderDetail));
-                                    # ADDED start the python script order with venv
-                                    # get username and password of user with userID
-                                    $status = "active";
-                                    # change quantity last from 60*1 - 1800*1 to 60*1,1800*1
-                                    $quantityLast = str_replace(" - ",",",$quantityLast);
-                                    $command = escapeshellcmd("python3 ../../Desktop/newOrder.py $adminUsername $orderID $userID $quantityLast");
-                                    $output = shell_exec($command . " 2>&1"); // 2>&1 is for error
-                                    # save output to log file
-                                    file_put_contents("logs/".$orderID.".txt",$output);
-                                    # ADDED end the python script order
+                                    if (isEnoughCode($quantityLast, $adminUsername)){
+                                        file_put_contents("orders/".$orderID.".json",json_encode($orderDetail));
+                                        # ADDED start the python script order with venv
+                                        # get username and password of user with userID
+                                        $status = "active";
+                                        # change quantity last from 60*1 - 1800*1 to 60*1,1800*1
+                                        $quantityLast = str_replace(" - ",",",$quantityLast);
+                                        $command = escapeshellcmd("python3 ../../Desktop/newOrder.py $adminUsername $orderID $userID $quantityLast");
+                                        $output = shell_exec($command . " 2>&1"); // 2>&1 is for error
+                                        # save output to log file
+                                        file_put_contents("logs/".$orderID.".txt",$output);
+                                        # ADDED end the python script order
+                                    } else {
+                                        $message = '
+                                        <div class="card mb-4 py-3 border-left-danger">
+                                            <div class="card-body">
+                                                Not enough code!
+                                            </div>
+                                        </div>';
+                                    }
                                 }
                             }else{
                                 $message = '
