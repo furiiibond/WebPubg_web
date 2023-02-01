@@ -389,9 +389,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                     <span>Orders</span></a>
             </li>
 
-            <div class="sidebar-heading">
-                User Section
-            </div>
+            <div class="sidebar-heading">Midasbuy account section</div>
 
             <li class="nav-item">
                 <a class="nav-link" href="users.php">

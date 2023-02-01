@@ -24,9 +24,9 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                 $command = escapeshellcmd("python3 ../../Desktop/testConnect.py");
                 $output = shell_exec($command . " 2>&1"); // 2>&1 is for error
                 if($output == "ready".PHP_EOL){
-                    $lastResponse = '<span style="color: green;font-size: 1.4em;">●</span>' . ' Python Ready';
+                    $lastResponse = '<span style="color: green;font-size: 1.4em;">●</span>' . ' Ready';
                 }else{
-                    $lastResponse = '<span style="color: red;font-size: 1.4em;">●</span>' . " Python Not Ready" ;
+                    $lastResponse = '<span style="color: red;font-size: 1.4em;">●</span>' . " Not Ready" ;
                 }
 
                 $codes = glob("codes/*.json");
@@ -523,6 +523,41 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                         <?php
                                     }
                                     ?>
+                                    <div class="col-lg-12 mb-12">
+                                        <div class="card shadow mb-4">
+                                            <div class="card-header py-3">
+                                                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-code"></i> Code Statistics</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div>
+                                                    <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
+                                                        <?php
+                                                        if(isset($codeDetails) && !empty($codeDetails)){
+                                                            echo"<tr>
+                                                            <th>Amount:</th>";
+                                                            foreach ($codeDetails as $key => $quantity) {
+                                                                echo "
+
+                                                                    <td>".$key." UC</td>
+                                                                    ";
+                                                            }
+                                                            echo "</tr>
+                                                                <tr>
+                                                                    <th>Quantity:</th>";
+                                                            foreach ($codeDetails as $key => $quantity) {
+                                                                echo "
+                                                                    <td>".$quantity."</td>
+                                                                    ";
+                                                            }
+                                                            echo "</tr>";
+                                                        }
+                                                        ?>
+
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Content Row -->
@@ -715,41 +750,6 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
 
                                                         ?>
                                                         </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12 mb-12">
-                                        <div class="card shadow mb-4">
-                                            <div class="card-header py-3">
-                                                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-code"></i> Code Statistics</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
-                                                        <?php
-                                                        if(isset($codeDetails) && !empty($codeDetails)){
-                                                            echo"<tr>
-                                                            <th>Amount:</th>";
-                                                            foreach ($codeDetails as $key => $quantity) {
-                                                                echo "
-
-                                                                    <td>".$key." UC</td>
-                                                                    ";
-                                                            }
-                                                            echo "</tr>
-                                                                <tr>
-                                                                    <th>Quantity:</th>";
-                                                            foreach ($codeDetails as $key => $quantity) {
-                                                                echo "
-                                                                    <td>".$quantity."</td>
-                                                                    ";
-                                                            }
-                                                            echo "</tr>";
-                                                        }
-                                                        ?>
-
                                                     </table>
                                                 </div>
                                             </div>

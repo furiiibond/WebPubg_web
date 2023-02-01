@@ -145,7 +145,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center iconHidedOnPhone" href="index.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-skull-crossbones"></i>
                 </div>
@@ -153,31 +153,29 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
             </a>
 
             <!-- Divider -->
-            <hr class="sidebar-divider my-0">
+            <hr class="sidebar-divider my-0 iconHidedOnPhone">
 
-            <li class="nav-item active">
+            <li class="nav-item active iconHidedOnPhone">
                 <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Home</span></a>
             </li>
 
-            <hr class="sidebar-divider">
+            <hr class="sidebar-divider iconHidedOnPhone">
 
-            <div class="sidebar-heading">
+            <div class="sidebar-heading iconHidedOnPhone">
                 Order Section
             </div>
 
-            <li class="nav-item">
+            <li class="nav-item iconHidedOnPhone">
                 <a class="nav-link" href="orders.php">
                     <i class="fas fa-fw fa-list"></i>
                     <span>Orders</span></a>
             </li>
 
-            <div class="sidebar-heading">
-                User Section
-            </div>
+            <div class="sidebar-heading iconHidedOnPhone">Midasbuy account section</div>
 
-            <li class="nav-item">
+            <li class="nav-item iconHidedOnPhone">
                 <a class="nav-link" href="users.php">
                     <i class="fas fa-fw fa-user"></i>
                     <span>Users</span></a>
@@ -197,11 +195,11 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
             
             ?>
 
-            <div class="sidebar-heading">
+            <div class="sidebar-heading iconHidedOnPhone">
                 Code Section
             </div>
 
-            <li class="nav-item">
+            <li class="nav-item iconHidedOnPhone">
                 <a class="nav-link" href="codes.php">
                     <i class="fas fa-fw fa-code"></i>
                     <span>Codes</span></a>
@@ -286,18 +284,18 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                 <div class="p-5">
                                     <form class="user" method="POST" action="settings.php">
                                     <div class="form-group">
-                                            <label style="font-size:12px">Admin Password</label>
+                                            <label style="font-size:12px">Change your password</label>
                                             <input type="text" class="form-control"
                                                 name="adminPassword" aria-describedby="adminPasswordHelp"
                                                 placeholder="Admin Password" value="<?php echo $currentAdminPassword ?>">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" style="display: none">
                                             <label style="font-size:12px">Admin Key</label>
                                             <input type="text" class="form-control"
                                                 name="adminKey" aria-describedby="adminKeyHelp"
                                                 placeholder="Admin Key" value="<?php echo $currentAdminKey ?>">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" style="display: none">
                                             <label style="font-size:12px">Settings Key</label>
                                             <input type="text" class="form-control"
                                                 name="settingsKey" aria-describedby="settingsKeyHelp"
@@ -310,19 +308,19 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                                 $status = "disabled";
                                             }
                                         ?>
-                                        <div class="form-group">
+                                        <div class="form-group" style="display: none">
                                             <label style="font-size:12px">Order Duration (seconds)</label>
                                             <input type="number" class="form-control"
                                                 name="orderDuration" aria-describedby="orderDurationHelp"
                                                 placeholder="Order Duration (seconds)" min="0" max="30" value="<?php echo $currentOrderDuration ?>" <?php echo $status ?>>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" style="display: none">
                                             <label style="font-size:12px">Thread Count</label>
                                             <input type="number" class="form-control"
                                                 name="threadCount" aria-describedby="threadCountHelp"
                                                 placeholder="Thread Count" min="1" value="<?php echo $currentThreadCount ?>" <?php echo $status ?>>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" style="display: none">
                                             <label style="font-size:12px">Time Zone</label>
                                             <input type="number" class="form-control"
                                                 name="timeZone" aria-describedby="timeZoneHelp"

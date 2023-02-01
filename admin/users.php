@@ -226,9 +226,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                     <span>Orders</span></a>
             </li>
 
-            <div class="sidebar-heading">
-                User Section
-            </div>
+            <div class="sidebar-heading">Midasbuy account section</div>
 
             <li class="nav-item">
                 <a class="nav-link" href="users.php">
@@ -334,7 +332,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
                                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    Total Users</div>
+                                                    Total midasbuy accounts</div>
                                                 <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $totalUsers ?></div>
                                             </div>
                                             <div class="col-auto">
@@ -349,7 +347,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-plus"></i> New User</h6>
+                            <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-plus"></i> Midasbuy account</h6>
                         </div>
                         <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
@@ -387,7 +385,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-user"></i> Users</h6>
+                            <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-user"></i> Midasbuy accounts</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
