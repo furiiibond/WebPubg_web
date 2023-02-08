@@ -47,14 +47,18 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])) {
         }
     }
 }
+$data = array();
 if(isset($orderDetails) && !empty($orderDetails)){
     foreach ($orderDetails as $key => $orderDetail) {
-        echo "
-                <tr>
-                    <td>".$orderDetail["userID"]."</td>
-                    <td>".$orderDetail["quantity"]."</td>
-                    <td>".$orderDetail["status"]."</td>
-                </tr>";
+        $data[] = array(
+            "ID" => $orderDetail["id"],
+            "User ID" => $orderDetail["userID"],
+            "Quantity" => $orderDetail["quantity"],
+            "Status" => $orderDetail["status"],
+        );
     }
 }
+
+header('Content-Type: application/json');
+echo json_encode($data);
 ?>

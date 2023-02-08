@@ -289,73 +289,70 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                     </style>
                 </head>
                 <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+                <script src="theme/js/demo/datatables-custom.js"></script>
                 <script type="text/javascript">
                     function changeStatusColor(table) {
                         // if status is pending, replace by font with class <font style="background-color: #f6c23e; color:white; padding:5px">Pending</font>
-                        table.find('td:contains("Pending")').html(function (_, html) {
-                            return html.replace(/Pending/g, '<font style="background-color: #f6c23e; color:white; padding:5px">Pending</font>');
-                        });
-                        // if status is Failed or failed, replace by font with class <font style="background-color: #e74a3b; color:white; padding:5px">Failed</font>
-                        table.find('td:contains("Failed")').html(function (_, html) {
-                            return html.replace(/Failed/g, '<font style="background-color: #e74a3b; color:white; padding:5px">Failed</font>');
-                        });
-                        table.find('td:contains("failed")').html(function (_, html) {
-                            return html.replace(/failed/g, '<font style="background-color: #e74a3b; color:white; padding:5px">Failed</font>');
-                        });
-                        // if status is Completed or completed, replace by font with class <font style="background-color: #1cc88a; color:white; padding:5px">Completed</font>
-                        table.find('td:contains("Completed")').html(function (_, html) {
-                            return html.replace(/Completed/g, '<font style="background-color: #1cc88a; color:white; padding:5px">Completed</font>');
-                        });
-                        table.find('td:contains("completed")').html(function (_, html) {
-                            return html.replace(/completed/g, '<font style="background-color: #1cc88a; color:white; padding:5px">Completed</font>');
-                        });
-                        // if status is In Progress
-                        table.find('td:contains("In Progress")').html(function (_, html) {
-                            return html.replace(/In Progress/g, '<font style="background-color: #4e73df; color:white; padding:5px">In Progress</font>');
+                        table.column(3).nodes().to$().each(function (index, value) {
+                            if (value.innerHTML == "Pending") {
+                                value.innerHTML = '<font style="background-color: #f6c23e; color:white; padding:5px">Pending</font>';
+                            }
+                            // if status is Completed
+                            if (value.innerHTML == "Completed") {
+                                value.innerHTML = '<font style="background-color: #1cc88a; color:white; padding:5px">Completed</font>';
+                            }
+                            // if status is Failed
+                            if (value.innerHTML == "failed" || value.innerHTML == "Failed") {
+                                value.innerHTML = '<font style="background-color: #e74a3b; color:white; padding:5px">Failed</font>';
+                            }
+                            // if status is In Progress
+                            if (value.innerHTML == "In Progress") {
+                                value.innerHTML = '<font style="background-color: #36b9cc; color:white; padding:5px">In Progress</font>';
+                            }
                         });
                     }
                     var intervalId;
-                    $(document).ready(function () {
-                        changeStatusColor($('#dataTable'));
-                    }
-                    );
-                    intervalId = setInterval(function(){
-                            // if there is nothing serached in table
-                            if ($('#dataTable_filter > label > input').val() == '') {
-                                // hide the pagination
-                                $('#orderTable .dataTables_paginate').hide();
-                                // hide dataTables_length
-                                $('#orderTable .dataTables_length').hide();
-                                // display "AUTO REFRESHING" in #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) by add a new div
-                                if ($('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div').length == 1) {
-                                    // add loading logo created in css and check button
-                                    $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1)').append('<div style="display: flex;"><div class="loader"></div><div style="margin-left: 10px;">AUTO REFRESHING</div><div style="margin-left: 10px;"><input type="checkbox" id="check" checked></div></div>');
-                                }
-                                if(!$("#orderTable #check").is(":checked")) {
-                                    $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)').hide();
-                                    return;
-                                } else {
-                                    $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)').show();
-                                }
+                    $(document).ready(function(){
+                        changeStatusColor($('#dataTable').DataTable());
+                        intervalId = setInterval(function(){
+                            // if there is nothing serached in table and is not clicked
+                            if ($('.dataTables_filter input').val() == '' && !$('.dataTables_filter input').is(":focus")) {
                                 $.ajax({
                                     url: 'functions/getLastOrdersTable.php',
                                     type: 'POST',
+                                    dataType: 'json',
                                     success: function(data){
-                                        $('#ordersTable').html(data);
-                                        changeStatusColor($('#dataTable'));
+                                        // get the page clicked
+                                        var page = $('.pagination .active a').text();
+                                        // get the sorting of the table
+                                        var currentOrder = $('#dataTable').DataTable().order(); // Get the current order of the table
+                                        if ( $.fn.DataTable.isDataTable('#dataTable') ) {
+                                            $('#dataTable').DataTable().destroy();
+                                        }
+                                        var table = $('#dataTable').DataTable({
+                                            data: data,
+                                            columns: [
+                                                { data: "ID" },
+                                                { data: "User ID" },
+                                                { data: "Quantity" },
+                                                { data: "Status" },
+                                            ],
+                                            order: currentOrder, // Apply the previous order to the new data
+                                            "pageLength": 5,
+                                            // remove the pageLength option
+                                            "lengthChange": false,
+                                        });
+                                        // go to the page clicked
+                                        table.page(page-1).draw('page');
+                                        // hide the id column
+                                        table.column(0).visible(false);
+                                        // if status is pending, replace by font with class <font style="background-color: #f6c23e; color:white; padding:5px">Pending</font>
+                                        changeStatusColor(table);
                                     }
                                 });
-                            } else {
-                                // remove "AUTO REFRESHING"
-                                $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)').remove();
-                                // show the pagination
-                                $('#orderTable .dataTables_paginate').show();
-                                // show dataTables_length
-                                $('#orderTable .dataTables_length').show();
-
                             }
-                        }
-                        , 2500);
+                        }, 3000);
+                    });
                     setInterval(function(){
                         $.ajax({
                             url: 'functions/getCodesDetails.php',
@@ -773,6 +770,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                                         <thead>
                                                         <tr>
+                                                            <th>ID</th>
                                                             <th>User ID</th>
                                                             <th>Quantity</th>
                                                             <th>Status</th>
@@ -780,6 +778,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                                         </thead>
                                                         <tfoot>
                                                         <tr>
+                                                            <th>ID</th>
                                                             <th>User ID</th>
                                                             <th>Quantity</th>
                                                             <th>Status</th>
@@ -792,6 +791,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                                             foreach ($orderDetails as $key => $orderDetail) {
                                                                 echo "
                                                     <tr>
+                                                        <td>".$orderDetail["userID"]."</td>
                                                         <td>".$orderDetail["userID"]."</td>
                                                         <td>".$orderDetail["quantity"]."</td>
                                                         <td>".$orderDetail["status"]."</td>

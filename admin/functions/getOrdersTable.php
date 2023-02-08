@@ -47,7 +47,7 @@ $data = array();
 if(isset($orderDetails) && !empty($orderDetails)){
     foreach ($orderDetails as $key => $orderDetail) {
         if($orderDetail["status"] == "Completed"){
-            $action = "<a id='download' href='receipts/".$orderDetail["id"].".png' download='".$orderDetail["id"].".zip'>Download Receipts</a>";
+            $action = "<a id='download' href='receipts/".$orderDetail["id"].".zip' download='".$orderDetail["id"].".zip'>Download Receipts</a>";
         }elseif($orderDetail["status"] == "Failed"){
             $action = "<a href='?id=".$orderDetail["id"]."&status=Failed'>Delete Order</a>";
         }else{

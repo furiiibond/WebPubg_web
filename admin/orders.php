@@ -300,6 +300,10 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                             if (value.innerHTML == "failed" || value.innerHTML == "Failed") {
                                 value.innerHTML = '<font style="background-color: #e74a3b; color:white; padding:5px">Failed</font>';
                             }
+                            // if status is In Progress
+                            if (value.innerHTML == "In Progress") {
+                                value.innerHTML = '<font style="background-color: #36b9cc; color:white; padding:5px">In Progress</font>';
+                            }
                         });
                     }
                     $(document).ready(function(){
