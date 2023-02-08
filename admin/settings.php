@@ -110,33 +110,37 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
 
 <body id="page-top">
 
-<div class="hero__phone">
-    <section class="menu__body">
-        <div class="menu__links"><!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
-                <div class="sidebar-brand-icon phone_icon rotate-n-15">
-                    <i class="fas fa-skull-crossbones"></i>
-                </div>
-            </a>
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="orders.php">
-                <div class="phone_icon">
-                    <i class="fas fa-fw fa-list"></i>
-                </div>
-            </a>
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="users.php">
-                <div class="phone_icon">
-                    <i class="fas fa-fw fa-user"></i>
-                </div>
-            </a>
+                <div class="hero__phone">
+                    <section class="menu__body">
+                        <div class="menu__links d-flex align-items-center"><!-- Sidebar - Brand -->
+                            <a class="sidebar-brand align-items-center justify-content-center text-center" href="index.php">
+                                <div class="sidebar-brand-icon phone_icon rotate-n-15">
+                                    <i class="fas fa-skull-crossbones"></i>
+                                </div>
+                                <p style="font-size: small">Home</p>
+                            </a>
+                            <a class="sidebar-brand align-items-center justify-content-center text-center" href="orders.php">
+                                <div class="phone_icon">
+                                    <i class="fas fa-fw fa-list"></i>
+                                </div>
+                                <p style="font-size: small">Orders</p>
+                            </a>
+                            <a class="sidebar-brand align-items-center justify-content-center text-center" href="users.php">
+                                <div class="phone_icon">
+                                    <i class="fas fa-fw fa-user"></i>
+                                </div>
+                                <p style="font-size: small">M. Users</p>
+                            </a>
 
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="codes.php">
-                <div class="phone_icon">
-                    <i class="fas fa-fw fa-code"></i>
+                            <a class="sidebar-brand align-items-center justify-content-center text-center" href="codes.php">
+                                <div class="phone_icon">
+                                    <i class="fas fa-fw fa-code"></i>
+                                </div>
+                                <p style="font-size: small">Codes</p>
+                            </a>
+                        </div>
+                    </section>
                 </div>
-            </a>
-        </div>
-    </section>
-</div>
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -233,10 +237,11 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-                    <!-- Sidebar Toggle (Topbar) -->
+                    <!-- Sidebar Toggle (Topbar)
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
+                     -->
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -250,18 +255,32 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                     src="theme/img/undraw_profile.png">
                             </a>
                             <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="settings.php">
-                                    <i class="fas fa-wrench fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
-                                </a>
-                            </div>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                             aria-labelledby="userDropdown">
+                                            <a class="dropdown-item" href="settings.php">
+                                                <i class="fas fa-wrench fa-sm fa-fw mr-2 text-gray-400"></i>
+                                                Settings
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <!-- If is admin user then show admin panel -->
+                                            <?php
+                                            if(strpos($adminUsername,"admin")!==false){
+                                                echo '
+                                                    
+                                                    <a class="dropdown-item" href="admins.php">
+                                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400 fa-user-secret"></i>
+                                                        Admins
+                                                    </a>
+                                                    
+                                                    ';
+                                            }
+                                            ?>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                                Logout
+                                            </a>
+                                        </div>
                         </li>
 
                     </ul>

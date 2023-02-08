@@ -37,28 +37,28 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                         $quantityLast = "";
                         $quantityTotal = "";
                         if(!empty($quantity60)){
-                            $quantityLast .= "60*".$quantity60." - "; 
+                            $quantityLast .= "60*".$quantity60." - ";
                             $quantityTotal .= "(60*".$quantity60.")";
                         }if(!empty($quantity325)){
-                            $quantityLast .= "325*".$quantity325." - "; 
+                            $quantityLast .= "325*".$quantity325." - ";
                             $quantityTotal .= "+(325*".$quantity325.")";
                         }if(!empty($quantity660)){
                             $quantityLast .= "660*".$quantity660." - ";
-                            $quantityTotal .= "+(660*".$quantity660.")"; 
+                            $quantityTotal .= "+(660*".$quantity660.")";
                         }if(!empty($quantity1800)){
-                            $quantityLast .= "1800*".$quantity1800." - "; 
+                            $quantityLast .= "1800*".$quantity1800." - ";
                             $quantityTotal .= "+(1800*".$quantity1800.")";
                         }if(!empty($quantity3850)){
-                            $quantityLast .= "3850*".$quantity3850." - "; 
+                            $quantityLast .= "3850*".$quantity3850." - ";
                             $quantityTotal .= "+(3850*".$quantity3850.")";
                         }if(!empty($quantity8100)){
-                            $quantityLast .= "8100*".$quantity8100." - "; 
+                            $quantityLast .= "8100*".$quantity8100." - ";
                             $quantityTotal .= "+(8100*".$quantity8100.")";
                         }if(!empty($quantity16200)){
-                            $quantityLast .= "16200*".$quantity16200." - "; 
+                            $quantityLast .= "16200*".$quantity16200." - ";
                             $quantityTotal .= "+(16200*".$quantity16200.")";
                         }if(!empty($quantity24300)){
-                            $quantityLast .= "24300*".$quantity24300." - "; 
+                            $quantityLast .= "24300*".$quantity24300." - ";
                             $quantityTotal .= "+(24300*".$quantity24300.")";
                         }
                         $quantityLast = substr($quantityLast,0,-3);
@@ -111,11 +111,11 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                         $chosenOrder = "orders/".$_GET["id"].".json";
                         $chosenDetails = file_get_contents($chosenOrder);
                         $chosenDetails = json_decode($chosenDetails,true);
-        
+
                         if(isset($chosenDetails["owner"]) && $chosenDetails["owner"] == $adminUsername && $chosenDetails["status"] == "Pending" || isset($chosenDetails["owner"]) && $chosenDetails["owner"] == $adminUsername && $chosenDetails["status"] == "In Progress"){
                             $chosenDetails["status"] = "Completed";
                             $chosenDetails["description"] = "manually completed";
-        
+
                             file_put_contents($chosenOrder,json_encode($chosenDetails));
 
                             $message = '
@@ -131,7 +131,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                         if(is_file($chosenOrder)){
                             $chosenDetails = file_get_contents($chosenOrder);
                             $chosenDetails = json_decode($chosenDetails,true);
-            
+
                             if(isset($chosenDetails["owner"]) && $chosenDetails["owner"] == $adminUsername && $chosenDetails["status"] == "Failed"){
                                 unlink($chosenOrder);
                             }
@@ -183,382 +183,427 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                         }
                     }
                 }
-?>
+                ?>
 
-<!DOCTYPE html>
-<html lang="en">
+                <!DOCTYPE html>
+                <html lang="en">
 
-<head>
+                <head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+                    <meta charset="utf-8">
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                    <meta name="description" content="">
+                    <meta name="author" content="">
 
-    <title>Orders</title>
+                    <title>Orders</title>
 
-    <!-- Custom fonts for this template -->
-    <link href="theme/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+                    <!-- Custom fonts for this template -->
+                    <link href="theme/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+                    <link
+                            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+                            rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="theme/css/sb-admin-2.min.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="theme/img/undraw_profile.png">
+                    <!-- Custom styles for this template -->
+                    <link href="theme/css/sb-admin-2.min.css" rel="stylesheet">
+                    <link rel="icon" type="image/x-icon" href="theme/img/undraw_profile.png">
 
-    <!-- Custom styles for this page -->
-    <link href="theme/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="theme/css/barmenu.css">
-    <style>
-        input[type="number"] {
-        -webkit-appearance: textfield;
-        -moz-appearance: textfield;
-        appearance: textfield;
-        }
-
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        }
-
-        .number-input {
-        border: 1px solid #d1d3e2;
-        display: flex;
-        }
-
-        .number-input,
-        .number-input * {
-        box-sizing: border-box;
-        }
-
-        .number-input button {
-        outline:none;
-        -webkit-appearance: none;
-        background-color: transparent;
-        border: none;
-        align-items: center;
-        justify-content: center;
-        width: 2rem;
-        height: 2rem;
-        cursor: pointer;
-        margin: 0;
-        position: relative;
-        width: 33.3%;
-        }
-
-        .number-input button:before,
-        .number-input button:after {
-        display: inline-block;
-        position: absolute;
-        content: '';
-        width: 1rem;
-        height: 2px;
-        background-color: #d1d3e2;
-        transform: translate(-50%, -50%);
-        }
-        .number-input button.plus:after {
-        transform: translate(-50%, -50%) rotate(90deg);
-        }
-
-        .number-input input[type=number] {
-        font-family: sans-serif;
-        max-width: 5rem;
-        padding: .5rem;
-        border: solid #ddd;
-        border-width: 0 2px;
-        font-size: 1rem;
-        height: 2rem;
-        font-weight: bold;
-        text-align: center;
-        background-color: #262b49;
-        color: #6e707e;
-        min-width: 33.3%;
-        }
-        .user label{
-            display:inherit;
-            text-align: center;
-        }
-    </style>
-</head>
-<script src="https://code.jquery.com/jquery-3.1.1.js"></script>
-<script type="text/javascript">
-    var intervalId;
-    $(document).ready(function(){
-        intervalId = setInterval(function(){
-            // if there is nothing serached in table
-            if ($('.dataTables_filter input').val() == '') {
-                $.ajax({
-                    url: 'functions/getOrdersTable.php',
-                    type: 'POST',
-                    dataType: 'json',
-                    success: function(data){
-                        // get the page clicked
-                        var page = $('.pagination .active a').text();
-                        var currentOrder = $('#dataTable').DataTable().order(); // Get the current order of the table
-                        if ( $.fn.DataTable.isDataTable('#dataTable') ) {
-                            $('#dataTable').DataTable().destroy();
+                    <!-- Custom styles for this page -->
+                    <link href="theme/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+                    <link rel="stylesheet" href="theme/css/barmenu.css">
+                    <style>
+                        input[type="number"] {
+                            -webkit-appearance: textfield;
+                            -moz-appearance: textfield;
+                            appearance: textfield;
                         }
-                        var table = $('#dataTable').DataTable({
-                            data: data,
-                            columns: [
-                                { data: "ID" },
-                                { data: "User ID" },
-                                { data: "Quantity" },
-                                { data: "Quantity Total" },
-                                { data: "Quantity Sent" },
-                                { data: "Date" },
-                                { data: "Status" },
-                                { data: "Description" },
-                                { data: "Action" }
-                            ],
-                            order: currentOrder, // Apply the previous order to the new data
+
+                        input[type=number]::-webkit-inner-spin-button,
+                        input[type=number]::-webkit-outer-spin-button {
+                            -webkit-appearance: none;
+                        }
+
+                        .number-input {
+                            border: 1px solid #d1d3e2;
+                            display: flex;
+                        }
+
+                        .number-input,
+                        .number-input * {
+                            box-sizing: border-box;
+                        }
+
+                        .number-input button {
+                            outline:none;
+                            -webkit-appearance: none;
+                            background-color: transparent;
+                            border: none;
+                            align-items: center;
+                            justify-content: center;
+                            width: 2rem;
+                            height: 2rem;
+                            cursor: pointer;
+                            margin: 0;
+                            position: relative;
+                            width: 33.3%;
+                        }
+
+                        .number-input button:before,
+                        .number-input button:after {
+                            display: inline-block;
+                            position: absolute;
+                            content: '';
+                            width: 1rem;
+                            height: 2px;
+                            background-color: #d1d3e2;
+                            transform: translate(-50%, -50%);
+                        }
+                        .number-input button.plus:after {
+                            transform: translate(-50%, -50%) rotate(90deg);
+                        }
+
+                        .number-input input[type=number] {
+                            font-family: sans-serif;
+                            max-width: 5rem;
+                            padding: .5rem;
+                            border: solid #ddd;
+                            border-width: 0 2px;
+                            font-size: 1rem;
+                            height: 2rem;
+                            font-weight: bold;
+                            text-align: center;
+                            background-color: #262b49;
+                            color: #6e707e;
+                            min-width: 33.3%;
+                        }
+                        .user label{
+                            display:inherit;
+                            text-align: center;
+                        }
+                    </style>
+                </head>
+                <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+                <script src="theme/js/demo/datatables-custom.js"></script>
+                <script type="text/javascript">
+                    var intervalId;
+                    function changeStatusColor(table) {
+                        // if status is pending, replace by font with class <font style="background-color: #f6c23e; color:white; padding:5px">Pending</font>
+                        table.column(6).nodes().to$().each(function (index, value) {
+                            if (value.innerHTML == "Pending") {
+                                value.innerHTML = '<font style="background-color: #f6c23e; color:white; padding:5px">Pending</font>';
+                            }
+                            // if status is Completed
+                            if (value.innerHTML == "Completed") {
+                                value.innerHTML = '<font style="background-color: #1cc88a; color:white; padding:5px">Completed</font>';
+                            }
+                            // if status is Failed
+                            if (value.innerHTML == "failed" || value.innerHTML == "Failed") {
+                                value.innerHTML = '<font style="background-color: #e74a3b; color:white; padding:5px">Failed</font>';
+                            }
                         });
-                        // go to the page clicked
-                        table.page(page-1).draw('page');
                     }
-                });
-            }
-        }, 1000);
-    });
-</script>
+                    $(document).ready(function(){
+                        changeStatusColor($('#dataTable').DataTable());
+                        intervalId = setInterval(function(){
+                            // if there is nothing serached in table and is not clicked
+                            if ($('.dataTables_filter input').val() == '' && !$('.dataTables_filter input').is(":focus")) {
+                                $.ajax({
+                                    url: 'functions/getOrdersTable.php',
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    success: function(data){
+                                        // get the page clicked
+                                        var page = $('.pagination .active a').text();
+                                        // get the sorting of the table
+                                        var currentOrder = $('#dataTable').DataTable().order(); // Get the current order of the table
+                                        if ( $.fn.DataTable.isDataTable('#dataTable') ) {
+                                            $('#dataTable').DataTable().destroy();
+                                        }
+                                        var table = $('#dataTable').DataTable({
+                                            data: data,
+                                            columns: [
+                                                { data: "ID" },
+                                                { data: "User ID" },
+                                                { data: "Quantity" },
+                                                { data: "Quantity Total" },
+                                                { data: "Quantity Sent" },
+                                                { data: "Date" },
+                                                { data: "Status" },
+                                                { data: "Description" },
+                                                { data: "Action" }
+                                            ],
+                                            order: currentOrder, // Apply the previous order to the new data
+                                            "pageLength": 5,
+                                            // remove the pageLength option
+                                            "lengthChange": false,
+                                        });
+                                        // go to the page clicked
+                                        table.page(page-1).draw('page');
+                                        // hide the id column
+                                        table.column(0).visible(false);
+                                        // if status is pending, replace by font with class <font style="background-color: #f6c23e; color:white; padding:5px">Pending</font>
+                                        changeStatusColor(table);
+                                    }
+                                });
+                            }
+                        }, 3000);
+                    });
+                </script>
 
-<body id="page-top">
+                <body id="page-top">
 
-<div class="hero__phone">
-    <section class="menu__body">
-        <div class="menu__links"><!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
-                <div class="sidebar-brand-icon phone_icon rotate-n-15">
-                    <i class="fas fa-skull-crossbones"></i>
+                <div class="hero__phone">
+                    <section class="menu__body">
+                        <div class="menu__links d-flex align-items-center"><!-- Sidebar - Brand -->
+                            <a class="sidebar-brand align-items-center justify-content-center text-center" href="index.php">
+                                <div class="sidebar-brand-icon phone_icon rotate-n-15">
+                                    <i class="fas fa-skull-crossbones"></i>
+                                </div>
+                                <p style="font-size: small">Home</p>
+                            </a>
+                            <a class="sidebar-brand align-items-center justify-content-center text-center" href="orders.php">
+                                <div class="phone_icon">
+                                    <i class="fas fa-fw fa-list"></i>
+                                </div>
+                                <p style="font-size: small">Orders</p>
+                            </a>
+                            <a class="sidebar-brand align-items-center justify-content-center text-center" href="users.php">
+                                <div class="phone_icon">
+                                    <i class="fas fa-fw fa-user"></i>
+                                </div>
+                                <p style="font-size: small">M. Users</p>
+                            </a>
+
+                            <a class="sidebar-brand align-items-center justify-content-center text-center" href="codes.php">
+                                <div class="phone_icon">
+                                    <i class="fas fa-fw fa-code"></i>
+                                </div>
+                                <p style="font-size: small">Codes</p>
+                            </a>
+                        </div>
+                    </section>
                 </div>
-            </a>
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="orders.php">
-                <div class="phone_icon">
-                    <i class="fas fa-fw fa-list"></i>
-                </div>
-            </a>
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="users.php">
-                <div class="phone_icon">
-                    <i class="fas fa-fw fa-user"></i>
-                </div>
-            </a>
 
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="codes.php">
-                <div class="phone_icon">
-                    <i class="fas fa-fw fa-code"></i>
-                </div>
-            </a>
-        </div>
-    </section>
-</div>
+                <!-- Page Wrapper -->
+                <div id="wrapper">
 
-    <!-- Page Wrapper -->
-    <div id="wrapper">
+                    <!-- Sidebar -->
+                    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
+                        <!-- Sidebar - Brand -->
+                        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+                            <div class="sidebar-brand-icon rotate-n-15">
+                                <i class="fas fa-skull-crossbones"></i>
+                            </div>
+                            <div class="sidebar-brand-text mx-3">Admin</div>
+                        </a>
 
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-skull-crossbones"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">Admin</div>
-            </a>
+                        <!-- Divider -->
+                        <hr class="sidebar-divider my-0">
 
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="index.php">
+                                <i class="fas fa-fw fa-tachometer-alt"></i>
+                                <span>Home</span></a>
+                        </li>
 
-            <li class="nav-item active">
-                <a class="nav-link" href="index.php">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Home</span></a>
-            </li>
+                        <hr class="sidebar-divider">
 
-            <hr class="sidebar-divider">
+                        <div class="sidebar-heading">
+                            Order Section
+                        </div>
 
-            <div class="sidebar-heading">
-                Order Section
-            </div>
+                        <li class="nav-item">
+                            <a class="nav-link" href="orders.php">
+                                <i class="fas fa-fw fa-list"></i>
+                                <span>Orders</span></a>
+                        </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="orders.php">
-                    <i class="fas fa-fw fa-list"></i>
-                    <span>Orders</span></a>
-            </li>
+                        <div class="sidebar-heading">Midasbuy account section</div>
 
-            <div class="sidebar-heading">Midasbuy account section</div>
+                        <li class="nav-item">
+                            <a class="nav-link" href="users.php">
+                                <i class="fas fa-fw fa-user"></i>
+                                <span>Users</span></a>
+                        </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="users.php">
-                    <i class="fas fa-fw fa-user"></i>
-                    <span>Users</span></a>
-            </li>
+                        <?php
 
-            <?php
-            
-                if(strpos($adminUsername,"admin")!==false){
-                    echo '
+                        if(strpos($adminUsername,"admin")!==false){
+                            echo '
                     <li class="nav-item">
                     <a class="nav-link" href="admins.php">
                         <i class="fas fa-fw fa-user-secret"></i>
                         <span>Admins</span></a>
                     </li>
                     ';
-                }
-            
-            ?>
+                        }
 
-            <div class="sidebar-heading">
-                Code Section
-            </div>
+                        ?>
 
-            <li class="nav-item">
-                <a class="nav-link" href="codes.php">
-                    <i class="fas fa-fw fa-code"></i>
-                    <span>Codes</span></a>
-            </li>
+                        <div class="sidebar-heading">
+                            Code Section
+                        </div>
 
-            <hr class="sidebar-divider my-0">
-
-            <li class="nav-item">
-                <a class="nav-link" href="settings.php">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Settings</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-        </ul>
-        <!-- End of Sidebar -->
-
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
-
-            <!-- Main Content -->
-            <div id="content">
-
-                <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $checkUsername ?></span>
-                                <img class="img-profile rounded-circle"
-                                    src="theme/img/undraw_profile.png">
-                            </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="settings.php">
-                                    <i class="fas fa-wrench fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
-                                </a>
-                            </div>
+                        <li class="nav-item">
+                            <a class="nav-link" href="codes.php">
+                                <i class="fas fa-fw fa-code"></i>
+                                <span>Codes</span></a>
                         </li>
 
+                        <hr class="sidebar-divider my-0">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="settings.php">
+                                <i class="fas fa-fw fa-wrench"></i>
+                                <span>Settings</span></a>
+                        </li>
+
+                        <!-- Divider -->
+                        <hr class="sidebar-divider d-none d-md-block">
+
+                        <!-- Sidebar Toggler (Sidebar) -->
+                        <div class="text-center d-none d-md-inline">
+                            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                        </div>
+
                     </ul>
+                    <!-- End of Sidebar -->
 
-                </nav>
-                <!-- End of Topbar -->
+                    <!-- Content Wrapper -->
+                    <div id="content-wrapper" class="d-flex flex-column">
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
+                        <!-- Main Content -->
+                        <div id="content">
 
-                    <div class="row">
-                        <div class="col-xl-3 col-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Total Orders</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $totalOrders ?></div>
+                            <!-- Topbar -->
+                            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                                <!-- Sidebar Toggle (Topbar)
+                                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                                    <i class="fa fa-bars"></i>
+                                </button>
+                                 -->
+
+                                <!-- Topbar Navbar -->
+                                <ul class="navbar-nav ml-auto">
+
+                                    <!-- Nav Item - User Information -->
+                                    <li class="nav-item dropdown no-arrow">
+                                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $checkUsername ?></span>
+                                            <img class="img-profile rounded-circle"
+                                                 src="theme/img/undraw_profile.png">
+                                        </a>
+                                        <!-- Dropdown - User Information -->
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                             aria-labelledby="userDropdown">
+                                            <a class="dropdown-item" href="settings.php">
+                                                <i class="fas fa-wrench fa-sm fa-fw mr-2 text-gray-400"></i>
+                                                Settings
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <!-- If is admin user then show admin panel -->
+                                            <?php
+                                            if(strpos($adminUsername,"admin")!==false){
+                                                echo '
+                                                    
+                                                    <a class="dropdown-item" href="admins.php">
+                                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400 fa-user-secret"></i>
+                                                        Admins
+                                                    </a>
+                                                    
+                                                    ';
+                                            }
+                                            ?>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                                Logout
+                                            </a>
                                         </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-list fa-2x text-gray-300"></i>
+                                    </li>
+
+                                </ul>
+
+                            </nav>
+                            <!-- End of Topbar -->
+
+                            <!-- Begin Page Content -->
+                            <div class="container-fluid">
+
+                                <div class="row">
+                                    <div class="col-xl-3 col-6 mb-4">
+                                        <div class="card border-left-primary shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                            Total Orders</div>
+                                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $totalOrders ?></div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <i class="fas fa-list fa-2x text-gray-300"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-3 col-6 mb-4">
+                                        <div class="card border-left-warning shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                            Pending Orders</div>
+                                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $pendingOrders ?></div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <i class="fas fa-pause fa-2x text-gray-300"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-3 col-6 mb-4">
+                                        <div class="card border-left-success shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                            Completed Orders</div>
+                                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $completedOrders ?></div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <i class="fas fa-play fa-2x text-gray-300"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-3 col-6 mb-4">
+                                        <div class="card border-left-danger shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                                            Failed Orders</div>
+                                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $failedOrders ?></div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <i class="fas fa-stop fa-2x text-gray-300"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="col-xl-3 col-6 mb-4">
-                            <div class="card border-left-warning shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Pending Orders</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $pendingOrders ?></div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-pause fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-3 col-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Completed Orders</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $completedOrders ?></div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-play fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-xl-3 col-6 mb-4">
-                            <div class="card border-left-danger shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                                Failed Orders</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $failedOrders ?></div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-stop fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                <!--
+                                <!--
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-plus"></i> New Order</h6>
@@ -678,59 +723,59 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                     </div>
                 -->
 
-                </div>
-                <!-- /.container-fluid -->
+                            </div>
+                            <!-- /.container-fluid -->
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
+                            <!-- Begin Page Content -->
+                            <div class="container-fluid">
 
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-list"></i> Orders</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>User ID</th>
-                                            <th>Quantity</th>
-                                            <th>Quantity Total</th>
-                                            <th>Quantity Sent</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
-                                            <th>Description</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>User ID</th>
-                                            <th>Quantity</th>
-                                            <th>Quantity Total</th>
-                                            <th>Quantity Sent</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
-                                            <th>Description</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody id="ordersTable">
-                                    <?php
-                                    
-                                    if(isset($orderDetails) && !empty($orderDetails)){
-                                        foreach ($orderDetails as $key => $orderDetail) {
-                                            if($orderDetail["status"] == "Completed"){
-                                                $action = "<td>-</td>";
-                                            }elseif($orderDetail["status"] == "Failed"){
-                                                $action = "<td><a href='?id=".$orderDetail["id"]."&status=Failed'>Delete Order</a></td>";
-                                            }else{
-                                                $action = "<td><a href='?id=".$orderDetail["id"]."&status=Completed'>Complete Order</a></td>";
-                                            }
-                                            echo "
+                                <!-- DataTales Example -->
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-list"></i> Orders</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>User ID</th>
+                                                    <th>Quantity</th>
+                                                    <th>Quantity Total</th>
+                                                    <th>Quantity Sent</th>
+                                                    <th>Date</th>
+                                                    <th>Status</th>
+                                                    <th>Description</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tfoot>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>User ID</th>
+                                                    <th>Quantity</th>
+                                                    <th>Quantity Total</th>
+                                                    <th>Quantity Sent</th>
+                                                    <th>Date</th>
+                                                    <th>Status</th>
+                                                    <th>Description</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                </tfoot>
+                                                <tbody id="ordersTable">
+                                                <?php
+
+                                                if(isset($orderDetails) && !empty($orderDetails)){
+                                                    foreach ($orderDetails as $key => $orderDetail) {
+                                                        if($orderDetail["status"] == "Completed"){
+                                                            $action = "<td>-</td>";
+                                                        }elseif($orderDetail["status"] == "Failed"){
+                                                            $action = "<td><a href='?id=".$orderDetail["id"]."&status=Failed'>Delete Order</a></td>";
+                                                        }else{
+                                                            $action = "<td><a href='?id=".$orderDetail["id"]."&status=Completed'>Complete Order</a></td>";
+                                                        }
+                                                        echo "
                                             <tr>
                                                 <td>".$orderDetail["id"]."</td>
                                                 <td>".$orderDetail["userID"]."</td>
@@ -742,147 +787,147 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                                 <td>".$orderDetail["description"]."</td>
                                                 ".$action."
                                             </tr>";
-                                        }
-                                    }
-                                    
-                                    ?>
-                                    </>
-                                </table>
+                                                    }
+                                                }
+
+                                                ?>
+                                                </>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /.container-fluid -->
+
+                        </div>
+                        <!-- End of Main Content -->
+
+                        <!-- Footer -->
+                        <footer class="sticky-footer bg-white">
+                            <div class="container my-auto">
+                                <div class="copyright text-center my-auto">
+                                    <span>Copyright &copy; 2022</span>
+                                </div>
+                            </div>
+                        </footer>
+                        <!-- End of Footer -->
+
+                    </div>
+                    <!-- End of Content Wrapper -->
+
+                </div>
+                <!-- End of Page Wrapper -->
+
+                <!-- Scroll to Top Button-->
+                <a class="scroll-to-top rounded" href="#page-top">
+                    <i class="fas fa-angle-up"></i>
+                </a>
+
+                <!-- Logout Modal-->
+                <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                <a class="btn btn-primary" href="logout.php">Logout</a>
                             </div>
                         </div>
                     </div>
-
                 </div>
-                <!-- /.container-fluid -->
+                <!-- Bootstrap core JavaScript-->
+                <script src="theme/vendor/jquery/jquery.min.js"></script>
+                <script src="theme/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-            </div>
-            <!-- End of Main Content -->
+                <!-- Core plugin JavaScript-->
+                <script src="theme/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; 2022</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
+                <!-- Custom scripts for all pages-->
+                <script src="theme/js/sb-admin-2.min.js"></script>
 
-        </div>
-        <!-- End of Content Wrapper -->
+                <!-- Page level plugins -->
+                <script src="theme/vendor/datatables/jquery.dataTables.min.js"></script>
+                <script src="theme/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-    </div>
-    <!-- End of Page Wrapper -->
+                <!-- Page level custom scripts -->
+                <script src="theme/js/demo/datatables-demo.js"></script>
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
+                <!-- Page barmenu -->
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="logout.php">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Bootstrap core JavaScript-->
-    <script src="theme/vendor/jquery/jquery.min.js"></script>
-    <script src="theme/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+                <script>
+                    $('#quantity60').keyup(function() {
+                        updateTotal();
+                    });
+                    $('#quantity325').keyup(function() {
+                        updateTotal();
+                    });
+                    $('#quantity660').keyup(function() {
+                        updateTotal();
+                    });
+                    $('#quantity1800').keyup(function() {
+                        updateTotal();
+                    });
+                    $('#quantity3850').keyup(function() {
+                        updateTotal();
+                    });
+                    $('#quantity8100').keyup(function() {
+                        updateTotal();
+                    });
+                    $('#quantity16200').keyup(function() {
+                        updateTotal();
+                    });
+                    $('#quantity24300').keyup(function() {
+                        updateTotal();
+                    });
 
-    <!-- Core plugin JavaScript-->
-    <script src="theme/vendor/jquery-easing/jquery.easing.min.js"></script>
+                    var updateTotal = function () {
+                        var input1 = parseInt($('#quantity60').val())*60;
+                        var input2 = parseInt($('#quantity325').val())*325;
+                        var input3 = parseInt($('#quantity660').val())*660;
+                        var input4 = parseInt($('#quantity1800').val())*1800;
+                        var input5 = parseInt($('#quantity3850').val())*3850;
+                        var input6 = parseInt($('#quantity8100').val())*8100;
+                        var input7 = parseInt($('#quantity16200').val())*16200;
+                        var input8 = parseInt($('#quantity24300').val())*24300;
 
-    <!-- Custom scripts for all pages-->
-    <script src="theme/js/sb-admin-2.min.js"></script>
+                        if (isNaN(input1)) {
+                            input1 = 0;
+                        }if (isNaN(input2)) {
+                            input2 = 0;
+                        }if (isNaN(input3)) {
+                            input3 = 0;
+                        }if (isNaN(input4)) {
+                            input4 = 0;
+                        }if (isNaN(input5)) {
+                            input5 = 0;
+                        }if (isNaN(input6)) {
+                            input6 = 0;
+                        }if (isNaN(input7)) {
+                            input7 = 0;
+                        }if (isNaN(input8)) {
+                            input8 = 0;
+                        }
+                        $('#total').val(input1 + input2 + input3 + input4 + input5 + input6 + input7 + input8 + " UC");
+                    };
 
-    <!-- Page level plugins -->
-    <script src="theme/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="theme/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+                    $('form').on('click', 'button:not([type="submit"])', function(e){
+                        e.preventDefault();
+                        updateTotal();
+                    })
+                </script>
+                </body>
 
-    <!-- Page level custom scripts -->
-    <script src="theme/js/demo/datatables-demo.js"></script>
+                </html>
 
-    <!-- Page barmenu -->
-    
-    <script>
-        $('#quantity60').keyup(function() {  
-            updateTotal();
-        });
-        $('#quantity325').keyup(function() {  
-            updateTotal();
-        });
-        $('#quantity660').keyup(function() {  
-            updateTotal();
-        });
-        $('#quantity1800').keyup(function() {  
-            updateTotal();
-        });
-        $('#quantity3850').keyup(function() {  
-            updateTotal();
-        });
-        $('#quantity8100').keyup(function() {  
-            updateTotal();
-        });
-        $('#quantity16200').keyup(function() {  
-            updateTotal();
-        });
-        $('#quantity24300').keyup(function() {  
-            updateTotal();
-        });
-
-        var updateTotal = function () {
-            var input1 = parseInt($('#quantity60').val())*60;
-            var input2 = parseInt($('#quantity325').val())*325;
-            var input3 = parseInt($('#quantity660').val())*660;
-            var input4 = parseInt($('#quantity1800').val())*1800;
-            var input5 = parseInt($('#quantity3850').val())*3850;
-            var input6 = parseInt($('#quantity8100').val())*8100;
-            var input7 = parseInt($('#quantity16200').val())*16200;
-            var input8 = parseInt($('#quantity24300').val())*24300;
-
-            if (isNaN(input1)) {
-                input1 = 0;
-            }if (isNaN(input2)) {
-                input2 = 0;
-            }if (isNaN(input3)) {
-                input3 = 0;
-            }if (isNaN(input4)) {
-                input4 = 0;
-            }if (isNaN(input5)) {
-                input5 = 0;
-            }if (isNaN(input6)) {
-                input6 = 0;
-            }if (isNaN(input7)) {
-                input7 = 0;
-            }if (isNaN(input8)) {
-                input8 = 0;
-            }
-            $('#total').val(input1 + input2 + input3 + input4 + input5 + input6 + input7 + input8 + " UC");
-        };
-
-        $('form').on('click', 'button:not([type="submit"])', function(e){
-            e.preventDefault();
-            updateTotal();
-        })
-    </script>
-</body>
-
-</html>
-
-<?php
+                <?php
             }else{
                 header("Location: logout.php");
             }

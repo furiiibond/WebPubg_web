@@ -288,78 +288,114 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                         }
                     </style>
                 </head>
+                <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
                 <script type="text/javascript">
+                    function changeStatusColor(table) {
+                        // if status is pending, replace by font with class <font style="background-color: #f6c23e; color:white; padding:5px">Pending</font>
+                        table.find('td:contains("Pending")').html(function (_, html) {
+                            return html.replace(/Pending/g, '<font style="background-color: #f6c23e; color:white; padding:5px">Pending</font>');
+                        });
+                        // if status is Failed or failed, replace by font with class <font style="background-color: #e74a3b; color:white; padding:5px">Failed</font>
+                        table.find('td:contains("Failed")').html(function (_, html) {
+                            return html.replace(/Failed/g, '<font style="background-color: #e74a3b; color:white; padding:5px">Failed</font>');
+                        });
+                        table.find('td:contains("failed")').html(function (_, html) {
+                            return html.replace(/failed/g, '<font style="background-color: #e74a3b; color:white; padding:5px">Failed</font>');
+                        });
+                        // if status is Completed or completed, replace by font with class <font style="background-color: #1cc88a; color:white; padding:5px">Completed</font>
+                        table.find('td:contains("Completed")').html(function (_, html) {
+                            return html.replace(/Completed/g, '<font style="background-color: #1cc88a; color:white; padding:5px">Completed</font>');
+                        });
+                        table.find('td:contains("completed")').html(function (_, html) {
+                            return html.replace(/completed/g, '<font style="background-color: #1cc88a; color:white; padding:5px">Completed</font>');
+                        });
+                        // if status is In Progress
+                        table.find('td:contains("In Progress")').html(function (_, html) {
+                            return html.replace(/In Progress/g, '<font style="background-color: #4e73df; color:white; padding:5px">In Progress</font>');
+                        });
+                    }
                     var intervalId;
+                    $(document).ready(function () {
+                        changeStatusColor($('#dataTable'));
+                    }
+                    );
                     intervalId = setInterval(function(){
-                        // if there is nothing serached in table
-                        if ($('#dataTable_filter > label > input').val() == '') {
-                            // hide the pagination
-                            $('#orderTable .dataTables_paginate').hide();
-                            // hide dataTables_length
-                            $('#orderTable .dataTables_length').hide();
-                            // display "AUTO REFRESHING" in #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) by add a new div
-                            if ($('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div').length == 1) {
-                                // add loading logo created in css and check button
-                                $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1)').append('<div style="display: flex;"><div class="loader"></div><div style="margin-left: 10px;">AUTO REFRESHING</div><div style="margin-left: 10px;"><input type="checkbox" id="check" checked></div></div>');
-                            }
-                            if(!$("#orderTable #check").is(":checked")) {
-                                $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)').hide();
-                                return;
-                            } else {
-                                $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)').show();
-                            }
-                            $.ajax({
-                                url: 'functions/getLastOrdersTable.php',
-                                type: 'POST',
-                                success: function(data){
-                                    $('#ordersTable').html(data);
+                            // if there is nothing serached in table
+                            if ($('#dataTable_filter > label > input').val() == '') {
+                                // hide the pagination
+                                $('#orderTable .dataTables_paginate').hide();
+                                // hide dataTables_length
+                                $('#orderTable .dataTables_length').hide();
+                                // display "AUTO REFRESHING" in #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) by add a new div
+                                if ($('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div').length == 1) {
+                                    // add loading logo created in css and check button
+                                    $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1)').append('<div style="display: flex;"><div class="loader"></div><div style="margin-left: 10px;">AUTO REFRESHING</div><div style="margin-left: 10px;"><input type="checkbox" id="check" checked></div></div>');
                                 }
-                            });
-                        } else {
-                            // remove "AUTO REFRESHING"
-                            $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)').remove();
-                            // show the pagination
-                            $('#orderTable .dataTables_paginate').show();
-                            // show dataTables_length
-                            $('#orderTable .dataTables_length').show();
+                                if(!$("#orderTable #check").is(":checked")) {
+                                    $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)').hide();
+                                    return;
+                                } else {
+                                    $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)').show();
+                                }
+                                $.ajax({
+                                    url: 'functions/getLastOrdersTable.php',
+                                    type: 'POST',
+                                    success: function(data){
+                                        $('#ordersTable').html(data);
+                                        changeStatusColor($('#dataTable'));
+                                    }
+                                });
+                            } else {
+                                // remove "AUTO REFRESHING"
+                                $('#orderTable #dataTable_wrapper > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)').remove();
+                                // show the pagination
+                                $('#orderTable .dataTables_paginate').show();
+                                // show dataTables_length
+                                $('#orderTable .dataTables_length').show();
 
-                        }}, 1000);
+                            }
+                        }
+                        , 2500);
                     setInterval(function(){
                         $.ajax({
-                                url: 'functions/getCodesDetails.php',
-                                type: 'POST',
-                                success: function(data){
-                                    $('#dataTable2').html(data);
-                                }
-                            });
-                        }, 1500)
+                            url: 'functions/getCodesDetails.php',
+                            type: 'POST',
+                            success: function(data){
+                                $('#dataTable2').html(data);
+                            }
+                        });
+                    }, 3000)
                 </script>
 
                 <body id="page-top">
 
                 <div class="hero__phone">
                     <section class="menu__body">
-                        <div class="menu__links"><!-- Sidebar - Brand -->
-                            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+                        <div class="menu__links d-flex align-items-center"><!-- Sidebar - Brand -->
+                            <a class="sidebar-brand align-items-center justify-content-center text-center" href="index.php">
                                 <div class="sidebar-brand-icon phone_icon rotate-n-15">
                                     <i class="fas fa-skull-crossbones"></i>
                                 </div>
+                                <p style="font-size: small">Home</p>
                             </a>
-                            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="orders.php">
+                            <a class="sidebar-brand align-items-center justify-content-center text-center" href="orders.php">
                                 <div class="phone_icon">
                                     <i class="fas fa-fw fa-list"></i>
                                 </div>
+                                <p style="font-size: small">Orders</p>
                             </a>
-                            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="users.php">
+                            <a class="sidebar-brand align-items-center justify-content-center text-center" href="users.php">
                                 <div class="phone_icon">
                                     <i class="fas fa-fw fa-user"></i>
                                 </div>
+                                <p style="font-size: small">M. Users</p>
                             </a>
 
-                            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="codes.php">
+                            <a class="sidebar-brand align-items-center justify-content-center text-center" href="codes.php">
                                 <div class="phone_icon">
                                     <i class="fas fa-fw fa-code"></i>
                                 </div>
+                                <p style="font-size: small">Codes</p>
                             </a>
                         </div>
                     </section>
@@ -462,10 +498,11 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                             <!-- Topbar -->
                             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-                                <!-- Sidebar Toggle (Topbar) -->
+                                <!-- Sidebar Toggle (Topbar)
                                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                                     <i class="fa fa-bars"></i>
                                 </button>
+                                -->
 
                                 <!-- Topbar Navbar -->
                                 <ul class="navbar-nav ml-auto">
@@ -485,6 +522,20 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                                 <i class="fas fa-wrench fa-sm fa-fw mr-2 text-gray-400"></i>
                                                 Settings
                                             </a>
+                                            <div class="dropdown-divider"></div>
+                                            <!-- If is admin user then show admin panel -->
+                                            <?php
+                                            if(strpos($adminUsername,"admin")!==false){
+                                                echo '
+                                                    
+                                                    <a class="dropdown-item" href="admins.php">
+                                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400 fa-user-secret"></i>
+                                                        Admins
+                                                    </a>
+                                                    
+                                                    ';
+                                            }
+                                            ?>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -528,7 +579,7 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                             <div class="card-header py-3">
                                                 <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-code"></i> Code Statistics</h6>
                                             </div>
-                                            <div class="card-body">
+                                            <div class="card-body table-responsive">
                                                 <div>
                                                     <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
                                                         <?php
