@@ -132,6 +132,17 @@ if(isset($_POST) && !empty($_POST)){
 
             </div>
 
+            <!-- Contact Us Section -->
+            <section class="" id="contact">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                            <h4 class="section-heading text-uppercase">Contact Us</h4>
+                            <p class="section-subheading text-muted">Reach out to us for any queries or assistance at this phone number : +966 50 980 9822</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
 
     </div>
