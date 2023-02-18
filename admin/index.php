@@ -99,13 +99,16 @@ if(isset($_SESSION["admin"]) && !empty($_SESSION["admin"])){
                                 $duplicateControl = false;
                                 if(is_file("orderID.txt")){
                                     $orderID = intval(file_get_contents("orderID.txt"))+1;
-                                    if(isset($_POST["lastOrderID"]) && strlen($_POST["lastOrderID"]) && $_POST["lastOrderID"]+1 < $orderID){
+                                    // get the UserID from the last order and the quantity from the last order and check if they are same with current order, also check if the order was sent more than a minute ago
+                                    $lastOrder = file_get_contents("orders/" . ($orderID - 1) .".json");
+                                    $lastOrder = json_decode($lastOrder,true);
+                                    if($lastOrder["userID"] == $userID && $lastOrder["quantityTotal"] == $quantityTotal && $lastOrder["date"] > time()-60){
                                         $orderID = $orderID-1;
 
                                         $message = '
                                         <div class="card mb-4 py-3 border-left-danger">
                                             <div class="card-body">
-                                                Order already sent!
+                                                Order already sent!, please wait a minute and try again.
                                             </div>
                                         </div>';
 
