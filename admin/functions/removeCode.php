@@ -14,7 +14,14 @@ if(isset($_GET["code"]) && strlen($_GET["code"]) > 0 && isset($_GET["owner"]) &&
         $codeDetails = json_decode($codeDetails,true);
 
         if(isset($codeDetails["owner"]) && $codeDetails["owner"] == $owner){
-            rename($codePath,str_replace("codes","wrongCodes",$codePath));
+            // check if force is 1 so move it to deletedCodes folder
+            if(isset($codeDetails["force"]) && $codeDetails["force"] == 1){
+                rename($codePath,str_replace("codes","deletedCodes",$codePath));
+            }
+            // check if force is 0 or not defined so move it to wrongCodes folder
+            else{
+                rename($codePath,str_replace("codes","wrongCodes",$codePath));
+            }
         }else{
             echo "null";
             //echo "Owner has no access to this code!";
